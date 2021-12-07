@@ -1,4 +1,4 @@
-//Recuperation de l'id
+// Recuperation de l'id
 const url = new URL(window.location.href);
 
 const id = url.searchParams.get("id");
@@ -21,7 +21,8 @@ fetch(`http://localhost:3000/api/products/${id}`)
     document.querySelector("#description").innerHTML = `${product.description}`;
     for (colors of product.colors) {
       option_color = document.createElement("option");
-      option_color.innerHTML = `<option value="${colors}">${colors}</option>`;
+      option_color.setAttribute("value", `${colors}`);
+      option_color.innerHTML = `${colors}`;
       document.querySelector("#colors").appendChild(option_color);
     }
   })
