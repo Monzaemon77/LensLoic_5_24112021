@@ -1,4 +1,6 @@
 let order = JSON.parse(localStorage.getItem("productChoose"));
+let quantitySum = 0;
+let priceSum = 0;
 if (order === null) {
 } else {
   let display = "";
@@ -25,5 +27,10 @@ if (order === null) {
                   </div>
                 </article>`;
     document.querySelector("#cart__items").innerHTML = display;
+    quantitySum += parseInt(`${order[i].quantityChoose}`);
+    priceSum +=
+      parseInt(`${order[i].price}`) * parseInt(`${order[i].quantityChoose}`);
   }
 }
+document.querySelector("#totalQuantity").innerHTML = quantitySum;
+document.querySelector("#totalPrice").innerHTML = priceSum;
