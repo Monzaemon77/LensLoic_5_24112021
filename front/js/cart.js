@@ -62,9 +62,8 @@ for (let k = 0; k < input.length; k++) {
     location.reload();
   });
 }
-
-//On recupere les données saisie par l'user
 const btnForm = document.querySelector("#order");
+//On recupere les données saisie par l'user
 const contact = {
   firstName: document.querySelector("#firstName").value,
   lastName: document.querySelector("#lastName").value,
@@ -74,86 +73,102 @@ const contact = {
 };
 //Verification des data saisies
 let form = document.querySelector(".cart__order__form");
-const regExControl = (value) => {
-  return /^[a-zA-Z]+([ \-']?[a-zA-Z]+[ \-']?[a-zA-Z]+[ \-']?)[a-zA-Z]+$/.test(
-    value
-  );
-};
-const regExControlAddress = (value) => {
-  return /^[#.0-9a-zA-Z\s,-]+$/.test(value);
-};
-const regExControlEMail = (value) => {
-  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
-};
-function firstNameControl() {
-  const prenom = contact.firstName;
-  if (regExControl(prenom)) {
-    return true;
+//On difinie les regex
+const regExControl = new RegExp(
+  "^[a-zA-Z]+([ -']?[a-zA-Z]+[ -']?[a-zA-Z]+[ -']?)[a-zA-Z]+$"
+);
+const regExControlAddress = new RegExp("^[#.0-9a-zA-Z ,-]+$");
+const regExControlEMail = new RegExp(
+  "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
+);
+//On ecoute les input
+form.firstName.addEventListener("change", function () {
+  firstNameControl(this);
+});
+form.lastName.addEventListener("change", function () {
+  lastNameControl(this);
+});
+form.address.addEventListener("change", function () {
+  addressControl(this);
+});
+form.city.addEventListener("change", function () {
+  cityControl(this);
+});
+form.email.addEventListener("change", function () {
+  emailControl(this);
+});
+//On definie les fonctions qui sont utilisés dans l'ecoute des input
+const firstNameControl = function (inputFirstName) {
+  if (regExControl.test(inputFirstName.value)) {
+    document.querySelector("#firstNameErrorMsg").innerHTML = "";
   } else {
     document.querySelector("#firstNameErrorMsg").innerHTML =
       "Le Prénom(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles(excepté le - et ') ne sont pas autorisés";
-    return false;
   }
-}
-function lastNameControl() {
-  const nom = contact.lastName;
-  if (regExControl(nom)) {
-    return true;
+};
+const lastNameControl = function (inputLastName) {
+  if (regExControl.test(inputLastName.value)) {
+    document.querySelector("#lastNameErrorMsg").innerHTML = "";
   } else {
     document.querySelector("#lastNameErrorMsg").innerHTML =
-      "Le Nom(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles ne sont pas autorisés";
-    return false;
+      "Le Prénom(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles(excepté le - et ') ne sont pas autorisés";
   }
-}
-function addressControl() {
-  const adresse = contact.address;
-  if (regExControlAddress(adresse)) {
-    return true;
+};
+const addressControl = function (inputAddress) {
+  if (regExControlAddress.test(inputAddress.value)) {
+    document.querySelector("#addressErrorMsg").innerHTML = "";
   } else {
     document.querySelector("#addressErrorMsg").innerHTML =
       "L'adresse n'est pas valide. Les symboles ne sont pas autorisés";
-    return false;
   }
-}
-function cityControl() {
-  const city = contact.city;
-  if (regExControl(city)) {
-    return true;
+};
+const cityControl = function (inputCity) {
+  if (regExControl.test(inputCity.value)) {
+    document.querySelector("#cityErrorMsg").innerHTML = "";
   } else {
     document.querySelector("#cityErrorMsg").innerHTML =
       "La Ville(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles ne sont pas autorisés";
-    return false;
   }
-}
-function emailControl() {
-  const email = contact.email;
-  if (regExControlEMail(email)) {
-    return true;
+};
+const emailControl = function (inputEmail) {
+  if (regExControlEMail.test(inputEmail.value)) {
+    document.querySelector("#emailErrorMsg").innerHTML = "";
   } else {
     document.querySelector("#emailErrorMsg").innerHTML =
       "L'Email n'est pas valide. Format accepté : quelquechose@domaine.extension";
-    return false;
   }
-}
-
+};
 // On crée un objet regroupant les produits choisis et les data du formulaire
 btnForm.addEventListener("click", (e) => {
   e.preventDefault();
-  if (
-    firstNameControl() &&
-    lastNameControl() &&
-    cityControl() &&
-    addressControl() &&
-    emailControl()
-  ) {
-    const dataOrder = {
-      order,
-      contact,
-    };
-    localStorage.setItem("contact", JSON.stringify(contact));
-    localStorage.setItem("dataOrder", JSON.stringify(dataOrder));
-  } else {
-    alert("Le Formulaire n'est pas valide, modifié et rechargé la page");
-    //setTimeout("location.reload(true);", 5000);
+  //On recupere l'id de chaque produit et on l'insert dans un tableau
+  products = [];
+  for (let k = 0; k < order.length; k++) {
+    products.push(order[k].idProduct);
   }
+  const dataOrder = {
+    contact,
+    products,
+  };
+  // if (
+  //   firstNameControl(this) &&
+  //   lastNameControl(this) &&
+  //   cityControl(this) &&
+  //   addressControl(this) &&
+  //   emailControl(this)
+  // ) {
+  localStorage.setItem("contact", JSON.stringify(contact));
+  localStorage.setItem("dataOrder", JSON.stringify(dataOrder));
+  fetch(`http://localhost:3000/api/products/order`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(dataOrder),
+  });
+  //window.location.href = "../html/confirmation.html";
+  // } else {
+  //   alert("Le Formulaire n'est pas valide");
+  // }
 });
