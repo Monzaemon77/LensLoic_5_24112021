@@ -160,6 +160,32 @@ btnForm.addEventListener("click", (e) => {
     contact,
     products,
   };
+  //On créer la fonction pour envoyer les données au server et aller à la page confirmation
+  function sendServer(dataOrder) {
+    const promise = fetch(`http://localhost:3000/api/products/order`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataOrder),
+    });
+    promise.then(async (response) => {
+      try {
+        const contenu = await response.json();
+        console.log(contenu);
+        if (response.ok) {
+          //On met le numero de commande en id dans l'URL
+          window.location.href = `../html/confirmation.html?id=${contenu.orderId}`;
+        } else {
+          //Affichage d'une alerte en cas de probleme avec le serveur
+          alert(`Probleme avec le serveur : erreur ${response.status}`);
+        }
+      } catch (err) {
+        alert(`Erreur qui vient du catch() ${err}`);
+      }
+    });
+  }
   if (
     firstNameControl(form.firstName) &&
     lastNameControl(form.lastName) &&
@@ -169,15 +195,7 @@ btnForm.addEventListener("click", (e) => {
   ) {
     localStorage.setItem("contact", JSON.stringify(contact));
     localStorage.setItem("dataOrder", JSON.stringify(dataOrder));
-    fetch(`http://localhost:3000/api/products/order`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dataOrder),
-    });
-    //window.location.href = "../html/confirmation.html";
+    sendServer(dataOrder);
   } else {
     alert("Le Formulaire n'est pas valide");
   }
