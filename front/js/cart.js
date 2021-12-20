@@ -54,9 +54,9 @@ for (let k = 0; k < input.length; k++) {
     //On selectionne le produit auquel est lié l'input
     let productSelect = order[k];
     //On met la nouvelle valeur dans une variable
-    newValue = event.target.value;
+    value = event.target.value;
     //On modifie la valeur de quantité et on la réinjecte dans LocalStorage
-    productSelect.quantityChoose = newValue;
+    productSelect.quantityChoose = value;
     localStorage.setItem("productChoose", JSON.stringify(order));
     //On refresh la page pour mettre à jour le DOM avec les nouvelles données
     location.reload();
@@ -98,44 +98,54 @@ form.email.addEventListener("change", function () {
   emailControl(this);
 });
 //On definie les fonctions qui sont utilisés dans l'ecoute des input
-const firstNameControl = function (inputFirstName) {
-  if (regExControl.test(inputFirstName.value)) {
+const firstNameControl = function (userFirstName) {
+  if (regExControl.test(userFirstName.value)) {
     document.querySelector("#firstNameErrorMsg").innerHTML = "";
+    return true;
   } else {
     document.querySelector("#firstNameErrorMsg").innerHTML =
       "Le Prénom(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles(excepté le - et ') ne sont pas autorisés";
+    return false;
   }
 };
-const lastNameControl = function (inputLastName) {
-  if (regExControl.test(inputLastName.value)) {
+const lastNameControl = function (userLastName) {
+  if (regExControl.test(userLastName.value)) {
     document.querySelector("#lastNameErrorMsg").innerHTML = "";
+    return true;
   } else {
     document.querySelector("#lastNameErrorMsg").innerHTML =
       "Le Prénom(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles(excepté le - et ') ne sont pas autorisés";
+    return false;
   }
 };
-const addressControl = function (inputAddress) {
-  if (regExControlAddress.test(inputAddress.value)) {
+const addressControl = function (userAddress) {
+  if (regExControlAddress.test(userAddress.value)) {
     document.querySelector("#addressErrorMsg").innerHTML = "";
+    return true;
   } else {
     document.querySelector("#addressErrorMsg").innerHTML =
       "L'adresse n'est pas valide. Les symboles ne sont pas autorisés";
+    return false;
   }
 };
-const cityControl = function (inputCity) {
-  if (regExControl.test(inputCity.value)) {
+const cityControl = function (userCity) {
+  if (regExControl.test(userCity.value)) {
     document.querySelector("#cityErrorMsg").innerHTML = "";
+    return true;
   } else {
     document.querySelector("#cityErrorMsg").innerHTML =
       "La Ville(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles ne sont pas autorisés";
+    return false;
   }
 };
-const emailControl = function (inputEmail) {
-  if (regExControlEMail.test(inputEmail.value)) {
+const emailControl = function (userEmail) {
+  if (regExControlEMail.test(userEmail.value)) {
     document.querySelector("#emailErrorMsg").innerHTML = "";
+    return true;
   } else {
     document.querySelector("#emailErrorMsg").innerHTML =
       "L'Email n'est pas valide. Format accepté : quelquechose@domaine.extension";
+    return false;
   }
 };
 // On crée un objet regroupant les produits choisis et les data du formulaire
@@ -150,25 +160,25 @@ btnForm.addEventListener("click", (e) => {
     contact,
     products,
   };
-  // if (
-  //   firstNameControl(this) &&
-  //   lastNameControl(this) &&
-  //   cityControl(this) &&
-  //   addressControl(this) &&
-  //   emailControl(this)
-  // ) {
-  localStorage.setItem("contact", JSON.stringify(contact));
-  localStorage.setItem("dataOrder", JSON.stringify(dataOrder));
-  fetch(`http://localhost:3000/api/products/order`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(dataOrder),
-  });
-  //window.location.href = "../html/confirmation.html";
-  // } else {
-  //   alert("Le Formulaire n'est pas valide");
-  // }
+  if (
+    firstNameControl(form.firstName) &&
+    lastNameControl(form.lastName) &&
+    addressControl(form.address) &&
+    cityControl(form.city) &&
+    emailControl(form.email)
+  ) {
+    localStorage.setItem("contact", JSON.stringify(contact));
+    localStorage.setItem("dataOrder", JSON.stringify(dataOrder));
+    fetch(`http://localhost:3000/api/products/order`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataOrder),
+    });
+    //window.location.href = "../html/confirmation.html";
+  } else {
+    alert("Le Formulaire n'est pas valide");
+  }
 });
