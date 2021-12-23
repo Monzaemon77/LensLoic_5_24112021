@@ -3,7 +3,9 @@ let quantitySum = 0;
 let priceSum = 0;
 if (order === null) {
 } else {
+  //je créé une variable display qui contiendra le code html
   let display = "";
+  //Pour chaque objet du tableau order qui a pour key ProductChoose(qui correspond aux produits ajoutés par l'user), on ajoute du code html dans la variable display avec les information des produits ajoutés dynamiquement
   for (let i in order) {
     display += `<article class="cart__item" data-id="${order[i].idProduct}" data-color="${order[i].colorChoose}">
                   <div class="cart__item__img">
@@ -27,15 +29,18 @@ if (order === null) {
                   </div>
                 </article>`;
     document.querySelector("#cart__items").innerHTML = display;
+    //On fait le calcul des articles du panier ainsi que le prix total
     quantitySum += parseInt(`${order[i].quantityChoose}`);
     priceSum +=
       parseInt(`${order[i].price}`) * parseInt(`${order[i].quantityChoose}`);
   }
 }
+//On ajoute le resultat des calculs precedent au html
 document.querySelector("#totalQuantity").innerHTML = quantitySum;
 document.querySelector("#totalPrice").innerHTML = priceSum;
-
+//On selectionne le bouton supprimer du produit (que j'ai mis dans une variable del)
 let del = document.querySelectorAll(".deleteItem");
+//Pour chaque produit du panier on ecoute le bouton supprimer del
 for (let j = 0; j < del.length; j++) {
   del[j].addEventListener("click", (event) => {
     //On selectionne le produit auquel est lié le bouton supprimer
@@ -73,7 +78,7 @@ const contact = {
 };
 //Verification des data saisies
 let form = document.querySelector(".cart__order__form");
-//On difinie les regex
+//On definie les regex
 const regExControl = new RegExp(
   "^[a-zA-Z]+([ -']?[a-zA-Z]+[ -']?[a-zA-Z]+[ -']?)[a-zA-Z]+$"
 );
@@ -173,7 +178,6 @@ btnForm.addEventListener("click", (e) => {
     promise.then(async (response) => {
       try {
         const contenu = await response.json();
-        console.log(contenu);
         if (response.ok) {
           //On met le numero de commande en id dans l'URL
           window.location.href = `../html/confirmation.html?id=${contenu.orderId}`;
