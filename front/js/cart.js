@@ -67,15 +67,6 @@ for (let k = 0; k < input.length; k++) {
     location.reload();
   });
 }
-const btnForm = document.querySelector("#order");
-//On recupere les données saisie par l'user
-const contact = {
-  firstName: document.querySelector("#firstName").value,
-  lastName: document.querySelector("#lastName").value,
-  address: document.querySelector("#address").value,
-  city: document.querySelector("#city").value,
-  email: document.querySelector("#email").value,
-};
 //Verification des data saisies
 let form = document.querySelector(".cart__order__form");
 //On definie les regex
@@ -153,14 +144,24 @@ const emailControl = function (userEmail) {
     return false;
   }
 };
-// On crée un objet regroupant les produits choisis et les data du formulaire
+const btnForm = document.querySelector("#order");
+//On ecoute le click du bouton commander
 btnForm.addEventListener("click", (e) => {
+  //On recupere les données saisie par l'user
+  const contact = {
+    firstName: document.querySelector("#firstName").value,
+    lastName: document.querySelector("#lastName").value,
+    address: document.querySelector("#address").value,
+    city: document.querySelector("#city").value,
+    email: document.querySelector("#email").value,
+  };
   e.preventDefault();
   //On recupere l'id de chaque produit et on l'insert dans un tableau
   products = [];
   for (let k = 0; k < order.length; k++) {
     products.push(order[k].idProduct);
   }
+  // On crée un objet regroupant les produits choisis et les data du formulaire
   const dataOrder = {
     contact,
     products,
