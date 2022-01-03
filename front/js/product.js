@@ -44,8 +44,8 @@ fetch(`http://localhost:3000/api/products/${id}`)
       if (choose == "") {
         alert((message = "Veuillez choisir une couleur"));
         return false;
-      } else if (quantity == "0") {
-        alert((message = "veuillez choisir une quantité"));
+      } else if (quantity <= 0 || quantity > 100) {
+        alert((message = "veuillez choisir une quantité entre 1 et 100"));
         return false;
       }
       // Fonction affichage d'une alerte
