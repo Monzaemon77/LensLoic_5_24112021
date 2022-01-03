@@ -1,7 +1,6 @@
 // Recuperation de l'id
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
-
 // Recuperation des data du produit grace à l'id
 fetch(`http://localhost:3000/api/products/${id}`)
   .then(function (res) {
@@ -12,16 +11,21 @@ fetch(`http://localhost:3000/api/products/${id}`)
   // Utilisation des data dans le html pour afficher le produit sur la page
   .then(function (product) {
     document.title = `${product.name}`;
-    document.querySelector(
-      ".item__img"
-    ).innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}"></img>`;
-    document.querySelector("#title").innerHTML = `${product.name}`;
-    document.querySelector("#price").innerHTML = `${product.price}`;
-    document.querySelector("#description").innerHTML = `${product.description}`;
+    let item__img = document.querySelector(".item__img");
+    let img = document.createElement("img");
+    img.setAttribute("src", `${product.imageUrl}`);
+    img.setAttribute("alt", `${product.altTxt}`);
+    item__img.appendChild(img);
+    let title = document.querySelector("#title");
+    title.textContent = `${product.name}`;
+    let price = document.querySelector("#price");
+    price.textContent = `${product.price}`;
+    let description = document.querySelector("#description");
+    description.textContent = `${product.description}`;
     for (color of product.colors) {
       option_color = document.createElement("option");
       option_color.setAttribute("value", `${color}`);
-      option_color.innerHTML = `${color}`;
+      option_color.textContent = `${color}`;
       document.querySelector("#colors").appendChild(option_color);
     }
     // Recuperation des données saisie par l'user
