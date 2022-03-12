@@ -4,31 +4,60 @@ let priceSum = 0;
 if (order === null) {
 } else {
   //je créé une variable display qui contiendra le code html
-  let display = "";
+  let display = document.querySelector("#cart__items");
   //Pour chaque objet du tableau order qui a pour key ProductChoose(qui correspond aux produits ajoutés par l'user), on ajoute du code html dans la variable display avec les information des produits ajoutés dynamiquement
   for (let i in order) {
-    display += `<article class="cart__item" data-id="${order[i].idProduct}" data-color="${order[i].colorChoose}">
-                  <div class="cart__item__img">
-                    <img src="${order[i].imageUrl}" alt="${order[i].altTxt}">
-                  </div>
-                  <div class="cart__item__content">
-                    <div class="cart__item__content__description">
-                      <h2>${order[i].name}</h2>
-                      <p>${order[i].colorChoose}</p>
-                      <p>${order[i].price}</p>
-                    </div>
-                    <div class="cart__item__content__settings">
-                      <div class="cart__item__content__settings__quantity">
-                        <p>Qté : </p>
-                        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${order[i].quantityChoose}">
-                      </div>
-                      <div class="cart__item__content__settings__delete">
-                        <p class="deleteItem">Supprimer</p>
-                      </div>
-                    </div>
-                  </div>
-                </article>`;
-    document.querySelector("#cart__items").innerHTML = display;
+    let article = document.createElement("article");
+    article.className = "cart__item";
+    article.setAttribute("data-id", `${order[i].idProduct}`);
+    article.setAttribute("data-color", `${order[i].colorChoose}`);
+    display.appendChild(article);
+    let div = document.createElement("div");
+    div.className = "cart__item__img";
+    article.appendChild(div);
+    let img = document.createElement("img");
+    img.setAttribute("src", `${order[i].imageUrl}`);
+    img.setAttribute("alt", `${order[i].altTxt}`);
+    div.appendChild(img);
+    let div2 = document.createElement("div");
+    div2.className = "cart__item__content";
+    article.appendChild(div2);
+    let div3 = document.createElement("div");
+    div3.className = "cart__item__content__description";
+    div2.appendChild(div3);
+    let h2 = document.createElement("h2");
+    h2.textContent = `${order[i].name}`;
+    div3.appendChild(h2);
+    let p = document.createElement("p");
+    p.textContent = `${order[i].colorChoose}`;
+    div3.appendChild(p);
+    let p2 = document.createElement("p");
+    p2.textContent = `${order[i].price}`;
+    div3.appendChild(p2);
+    let div4 = document.createElement("div");
+    div4.className = "cart__item__content__settings";
+    div2.appendChild(div4);
+    let div5 = document.createElement("div");
+    div5.className = "cart__item__content__settings__quantity";
+    div4.appendChild(div5);
+    let p__qté = document.createElement("p");
+    p__qté.textContent = "Qté : ";
+    div5.appendChild(p__qté);
+    let input = document.createElement("input");
+    input.setAttribute("type", "number");
+    input.className = "itemQuantity";
+    input.setAttribute("name", "itemQuantity");
+    input.setAttribute("min", 1);
+    input.setAttribute("max", 100);
+    input.setAttribute("value", `${order[i].quantityChoose}`);
+    div5.appendChild(input);
+    let div6 = document.createElement("div");
+    div6.className = "cart__item__content__settings__delete";
+    div4.appendChild(div6);
+    let p__del = document.createElement("p");
+    p__del.className = "deleteItem";
+    p__del.textContent = "Supprimer";
+    div6.appendChild(p__del);
     //On fait le calcul des articles du panier ainsi que le prix total
     quantitySum += parseInt(`${order[i].quantityChoose}`);
     priceSum +=
@@ -96,50 +125,50 @@ form.email.addEventListener("change", function () {
 //On definie les fonctions qui sont utilisés dans l'ecoute des input
 const firstNameControl = function (userFirstName) {
   if (regExControl.test(userFirstName.value)) {
-    document.querySelector("#firstNameErrorMsg").innerHTML = "";
+    document.querySelector("#firstNameErrorMsg").textContent = "";
     return true;
   } else {
-    document.querySelector("#firstNameErrorMsg").innerHTML =
+    document.querySelector("#firstNameErrorMsg").textContent =
       "Le Prénom(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles(excepté le - et ') ne sont pas autorisés";
     return false;
   }
 };
 const lastNameControl = function (userLastName) {
   if (regExControl.test(userLastName.value)) {
-    document.querySelector("#lastNameErrorMsg").innerHTML = "";
+    document.querySelector("#lastNameErrorMsg").textContent = "";
     return true;
   } else {
-    document.querySelector("#lastNameErrorMsg").innerHTML =
+    document.querySelector("#lastNameErrorMsg").textContent =
       "Le Prénom(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles(excepté le - et ') ne sont pas autorisés";
     return false;
   }
 };
 const addressControl = function (userAddress) {
   if (regExControlAddress.test(userAddress.value)) {
-    document.querySelector("#addressErrorMsg").innerHTML = "";
+    document.querySelector("#addressErrorMsg").textContent = "";
     return true;
   } else {
-    document.querySelector("#addressErrorMsg").innerHTML =
+    document.querySelector("#addressErrorMsg").textContent =
       "L'adresse n'est pas valide. Les symboles ne sont pas autorisés";
     return false;
   }
 };
 const cityControl = function (userCity) {
   if (regExControl.test(userCity.value)) {
-    document.querySelector("#cityErrorMsg").innerHTML = "";
+    document.querySelector("#cityErrorMsg").textContent = "";
     return true;
   } else {
-    document.querySelector("#cityErrorMsg").innerHTML =
+    document.querySelector("#cityErrorMsg").textContent =
       "La Ville(entre 2 et 20 caractères) n'est pas valide. Les chiffres et symboles ne sont pas autorisés";
     return false;
   }
 };
 const emailControl = function (userEmail) {
   if (regExControlEMail.test(userEmail.value)) {
-    document.querySelector("#emailErrorMsg").innerHTML = "";
+    document.querySelector("#emailErrorMsg").textContent = "";
     return true;
   } else {
-    document.querySelector("#emailErrorMsg").innerHTML =
+    document.querySelector("#emailErrorMsg").textContent =
       "L'Email n'est pas valide. Format accepté : quelquechose@domaine.extension";
     return false;
   }
